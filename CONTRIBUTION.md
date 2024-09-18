@@ -65,6 +65,9 @@ Then, delete the hotfix branch:
 ### Feature Development:
 Developers create feature/* branches from develop, work on features, commit changes, push changes, create PR and after approve merge them back into develop.
 
+### Bug Fixing:
+Developers create bugfix/* branches from develop, work on bug, commit changes, push changes, create PR and after approve merge them back into develop.
+
 ### Hotfixes:
 If a bug appears in production, a hotfix/* branch is created from master, the issue is fixed, commited, PR created, approved and the branch is merged into both master and develop.
 
