@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+/.vs
+/Tea_Store/.vs
+/Tea_Store/bin/Debug/net8.0
+/Tea_Store/obj/Container
+/Tea_Store/obj/Debug/net8.0/staticwebassets
+/Tea_Store/obj/Debug/net8.0
+/Tea_Store/obj
