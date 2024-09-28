@@ -1,0 +1,6 @@
+@Tea_Store_HostAddress = http://localhost:5033
+
+GET {{Tea_Store_HostAddress}}/tea_store_api/
+Accept: application/json
+
+###
