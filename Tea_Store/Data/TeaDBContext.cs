@@ -11,7 +11,6 @@ namespace Tea_Store.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<SiteReview> SiteReviews { get; set; }
-        public DbSet<History> Histories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderTea> OrderTeas { get; set; }
         public DbSet<TeaReview> TeaReviews { get; set; }
@@ -28,17 +27,12 @@ namespace Tea_Store.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // User - History (One-to-Many)
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.History)
-                .WithOne(h => h.User)
-                .HasForeignKey(h => h.UserID);
 
-            // User - WishList (One-to-Many)
+            // User - WishList (One-to-One)
             modelBuilder.Entity<User>()
-                .HasMany(u => u.WishList)
+                .HasOne(u => u.WishList)
                 .WithOne(w => w.User)
-                .HasForeignKey(w => w.UserID);
+                .HasForeignKey<WishList>(w => w.UserID);
 
             // User - Order (One-to-Many)
             modelBuilder.Entity<User>()
@@ -105,12 +99,6 @@ namespace Tea_Store.Models
                 .HasMany(o => o.OrderTeas)
                 .WithOne(ot => ot.Order)
                 .HasForeignKey(ot => ot.OrderID);
-
-            // Order - History (One-to-One)
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.History)
-                .WithOne(h => h.Order)
-                .HasForeignKey<Order>(o => o.HistoryID);
 
         }
     }
