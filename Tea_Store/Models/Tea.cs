@@ -13,11 +13,10 @@
         public string Description { get; set; } = null!;
         public bool AgeLimits { get; set; }
         public float Rating { get; set; }
-        public int HistoryID { get; set; }
 
         public virtual ICollection<OrderTea>? OrderTeas { get; set; }
         public virtual ICollection<TeaReview>? TeaReviews { get; set; }
         public virtual ICollection<ComponentTea>? ComponentTeas { get; set; }
-        public virtual ICollection<ComponentTea>? WishListTeas { get; set; }
+        public virtual ICollection<WishListTea>? WishListTeas { get; set; }
     }
 }
