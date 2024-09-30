@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tea_Store.Models
+﻿namespace Tea_Store.Models
 {
-    internal class WishListTea
+    public class WishListTea
     {
         public int Id { get; set; }
         public int WishListID { get; set; }
