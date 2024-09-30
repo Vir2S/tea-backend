@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tea_Store.Models
+﻿namespace Tea_Store.Models
 {
-    internal class Tea
+    public class Tea
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public string Country { get; set; } = null!;
-        public string Price { get; set; } = null!;
+        public decimal Price { get; set; }
         public string Properties { get; set; } = null!;
         public byte[] Photo { get; set; } = null!;
         public float Weight { get; set; }

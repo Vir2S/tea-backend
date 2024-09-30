@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tea_Store.Models
+﻿namespace Tea_Store.Models
 {
-
-    internal class User
+    public class User
     {
         public int Id { get; set; }
         public string FName { get; set; } = null!;
