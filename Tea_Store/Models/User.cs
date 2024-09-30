@@ -15,9 +15,10 @@ namespace Tea_Store.Models
         public string Sname { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
+        public string Role { get; set; } = null!;
         public int Age { get; set; }
         public byte[] Photo { get; set; } = null!;
-        public int WishListID { get; set; }
+        public int? WishListID { get; set; }
         public virtual SiteReview? SiteReview { get; set; }
         public virtual WishList? WishList { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
