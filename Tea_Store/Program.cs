@@ -1,13 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Configuration;
 using Tea_Store.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-/*
+
 builder.Services.AddDbContext<TeaDBContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-*/
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0))));
+
 
 builder.Services.AddControllers();
 
