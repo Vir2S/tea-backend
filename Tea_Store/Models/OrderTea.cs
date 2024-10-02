@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tea_Store.Models
 {
-    internal class OrderTea
+    public class OrderTea
     {
         public int Id { get; set; }
         public int OrderID { get; set; }

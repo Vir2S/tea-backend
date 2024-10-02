@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tea_Store.Models
 {
-    internal class Component
+    public class Component
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
