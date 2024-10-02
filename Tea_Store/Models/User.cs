@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Tea_Store.Models
 {
-
-    internal class User
+    public class User : IdentityUser<int>
     {
         public int Id { get; set; }
         public string FName { get; set; } = null!;
         public string Sname { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public Role Role { get; set; }
         public string Password { get; set; } = null!;
-        public int Age { get; set; }
+        public int Age { get; set; } 
         public byte[] Photo { get; set; } = null!;
         public int WishListID { get; set; }
         public virtual SiteReview? SiteReview { get; set; }
