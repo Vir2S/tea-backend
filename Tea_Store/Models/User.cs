@@ -16,7 +16,6 @@ namespace Tea_Store.Models
         public string Email { get; set; } = null!;
         public Role Role { get; set; }
         public string Password { get; set; } = null!;
-        public string Role { get; set; } = null!;
         public int Age { get; set; }
         public byte[] Photo { get; set; } = null!;
         public int? WishListID { get; set; }
