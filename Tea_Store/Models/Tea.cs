@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tea_Store.Models
+﻿namespace Tea_Store.Models
 {
-    internal class Tea
+    public class Tea
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public string Country { get; set; } = null!;
-        public string Price { get; set; } = null!;
+        public decimal Price { get; set; }
         public string Properties { get; set; } = null!;
         public byte[] Photo { get; set; } = null!;
         public float Weight { get; set; }
@@ -19,11 +13,10 @@ namespace Tea_Store.Models
         public string Description { get; set; } = null!;
         public bool AgeLimits { get; set; }
         public float Rating { get; set; }
-        public int HistoryID { get; set; }
 
         public virtual ICollection<OrderTea>? OrderTeas { get; set; }
         public virtual ICollection<TeaReview>? TeaReviews { get; set; }
         public virtual ICollection<ComponentTea>? ComponentTeas { get; set; }
-        public virtual ICollection<ComponentTea>? WishListTeas { get; set; }
+        public virtual ICollection<WishListTea>? WishListTeas { get; set; }
     }
 }

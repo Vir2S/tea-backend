@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Tea_Store.Models;
 
-namespace Tea_Store.Models
+namespace Tea_Store.Data
 {
-    internal class TeaDBContext : DbContext
+    public class TeaDBContext : DbContext
     {
+        public TeaDBContext(DbContextOptions<TeaDBContext> options) : base(options) { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<SiteReview> SiteReviews { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -99,7 +97,6 @@ namespace Tea_Store.Models
                 .HasMany(o => o.OrderTeas)
                 .WithOne(ot => ot.Order)
                 .HasForeignKey(ot => ot.OrderID);
-
         }
     }
 }

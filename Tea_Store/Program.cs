@@ -5,8 +5,9 @@ using System.Text;
 using Tea_Store.Mappings;
 using Tea_Store.Models;
 using Microsoft.EntityFrameworkCore;
-
-
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using Tea_Store.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +16,11 @@ builder.Services.AddDbContext<TeaDBContext>(options =>
         new MySqlServerVersion(new Version(8, 0))));
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication()
                 .AddBearerToken(IdentityConstants.BearerScheme);
-
-builder.Services.AddDbContext<TeaDBContext>();
 
 builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<TeaDBContext>()

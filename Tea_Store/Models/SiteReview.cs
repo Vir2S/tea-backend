@@ -1,10 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Tea_Store.Models
+﻿namespace Tea_Store.Models
 {
-    internal class SiteReview
+    public class SiteReview
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
