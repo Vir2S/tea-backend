@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tea_Store.Data;
 using Tea_Store.Models;
-using Tea_Store.DTO;
 using Microsoft.EntityFrameworkCore;
+using Tea_Store.DTOs.OrdersDTO;
 
 namespace Tea_Store.Controllers
 {
