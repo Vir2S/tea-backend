@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace Tea_Store.Models
 {
-    public class User : IdentityUser<int>
+    public class User
     {
         public int Id { get; set; }
         public string FName { get; set; } = null!;
         public string Sname { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
         public Role Role { get; set; }
         public string Password { get; set; } = null!;
         public int Age { get; set; }
