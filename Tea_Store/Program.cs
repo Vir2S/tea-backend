@@ -26,6 +26,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<TeaDBContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddAutoMapper(typeof(UserMappingProfile));
+builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
 
 
 builder.Services.AddAuthentication(options =>
