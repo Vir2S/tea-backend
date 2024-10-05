@@ -1,4 +1,4 @@
-﻿namespace Tea_Store.DTO
+﻿namespace Tea_Store.DTOs.OrdersDTO
 {
     public class OrderViewDTO
     {

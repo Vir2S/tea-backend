@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tea_Store.Data;
 using Tea_Store.Models;
-using Tea_Store.DTO;
+using Tea_Store.DTOs.OrdersDTO;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Tea_Store.Controllers
@@ -11,10 +12,12 @@ namespace Tea_Store.Controllers
     public class OrderController : ControllerBase
     {
         private readonly TeaDBContext _context;
+        private readonly IMapper _mapper;
 
-        public OrderController(TeaDBContext context)
+        public OrderController(TeaDBContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // Order create
@@ -22,19 +25,13 @@ namespace Tea_Store.Controllers
         public async Task<IActionResult> CreateOrder(OrderCreateDTO orderDto)
         {
             var user = await _context.Users.FindAsync(orderDto.UserId);
+
             if (user == null)
             {
                 return NotFound($"User with ID {orderDto.UserId} not found.");
             }
 
-            var order = new Order
-            {
-                UserID = orderDto.UserId,
-                Date = DateTime.Now,
-                Created = DateTime.Now,
-                Updated = DateTime.Now,
-                Status = "Pending"
-            };
+            var order = _mapper.Map<Order>(orderDto);
 
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
@@ -46,6 +43,7 @@ namespace Tea_Store.Controllers
                     foreach (var teaId in orderDto.TeaIds)
                     {
                         var tea = await _context.Teas.FindAsync(teaId);
+
                         if (tea == null)
                         {
                             return NotFound($"Tea with ID {teaId} not found.");
@@ -56,10 +54,11 @@ namespace Tea_Store.Controllers
                             OrderID = order.Id,
                             TeaID = teaId
                         };
+
                         _context.OrderTeas.Add(orderTea);
                     }
-                    await _context.SaveChangesAsync();
 
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
                 catch
@@ -77,6 +76,7 @@ namespace Tea_Store.Controllers
         public IActionResult UpdateOrder(int id, OrderUpdateDTO orderDto)
         {
             var order = _context.Orders.Find(id);
+
             if (order == null)
             {
                 return NotFound();
@@ -96,27 +96,16 @@ namespace Tea_Store.Controllers
             var order = _context.Orders
                 .Include(o => o.OrderTeas)
                 .ThenInclude(ot => ot.Tea)
-                .Where(o => o.Id == id)
-                .Select(o => new OrderViewDTO
-                {
-                    Id = o.Id,
-                    Date = o.Date,
-                    Status = o.Status,
-                    Teas = o.OrderTeas.Select(ot => new TeaDTO
-                    {
-                        Id = ot.Tea.Id,
-                        Title = ot.Tea.Title,
-                        Price = ot.Tea.Price
-                    }).ToList()
-                })
-                .FirstOrDefault();
+                .FirstOrDefault(o => o.Id == id);
 
             if (order == null)
             {
                 return NotFound();
             }
 
-            return Ok(order);
+            var orderViewDto = _mapper.Map<OrderViewDTO>(order);
+
+            return Ok(orderViewDto);
         }
     }
 }
