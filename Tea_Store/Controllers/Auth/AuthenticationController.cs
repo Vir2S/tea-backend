@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Tea_Store.DTOs.UsersDTO;
 using Tea_Store.Models;
 using System.IdentityModel.Tokens.Jwt;
+using ViewModels.AuthController;
 
 namespace Tea_Store.Controllers.Auth
 {
@@ -17,15 +17,15 @@ namespace Tea_Store.Controllers.Auth
         private readonly SignInManager<User> _signInManager = signInManager;
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
             if (user == null)
             {
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginViewModel.Password, false);
             if (!result.Succeeded)
             {
                 return Unauthorized(new { message = "Invalid email or password" });
@@ -41,7 +41,7 @@ namespace Tea_Store.Controllers.Auth
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.UserName)
+                //new Claim(ClaimTypes.Name, user.UserName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TeaStoreSecretKey"));

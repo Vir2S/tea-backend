@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Tea_Store.DTOs.UsersDTO;
 using Tea_Store.Models;
+using ViewModels.AuthController;
 
 namespace Tea_Store.Controllers.Auth
 {
@@ -14,11 +14,11 @@ namespace Tea_Store.Controllers.Auth
         private readonly IMapper _mapper = mapper;
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegistrationDTO registerDto)
+        public async Task<IActionResult> Register([FromBody] RegistrationViewModel registerViewModel)
         {
-            var user = _mapper.Map<User>(registerDto);
+            var user = _mapper.Map<User>(registerViewModel);
             user.Role = Role.user;
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
             if (result.Succeeded)
             {

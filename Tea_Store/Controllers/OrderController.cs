@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tea_Store.Data;
 using Tea_Store.Models;
-using Tea_Store.DTOs.OrdersDTO;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ViewModels.OrderController;
 
 namespace Tea_Store.Controllers
 {
@@ -22,16 +22,16 @@ namespace Tea_Store.Controllers
 
         // Order create
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(OrderCreateDTO orderDto)
+        public async Task<IActionResult> CreateOrder(OrderCreateViewModel orderViewModel)
         {
-            var user = await _context.Users.FindAsync(orderDto.UserId);
+            var user = await _context.Users.FindAsync(orderViewModel.UserId);
 
             if (user == null)
             {
-                return NotFound($"User with ID {orderDto.UserId} not found.");
+                return NotFound($"User with ID {orderViewModel.UserId} not found.");
             }
 
-            var order = _mapper.Map<Order>(orderDto);
+            var order = _mapper.Map<Order>(orderViewModel);
 
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
@@ -40,7 +40,7 @@ namespace Tea_Store.Controllers
                     _context.Orders.Add(order);
                     await _context.SaveChangesAsync();
 
-                    foreach (var teaId in orderDto.TeaIds)
+                    foreach (var teaId in orderViewModel.TeaIds)
                     {
                         var tea = await _context.Teas.FindAsync(teaId);
 
@@ -73,7 +73,7 @@ namespace Tea_Store.Controllers
 
         // Order status update
         [HttpPut("{id}")]
-        public IActionResult UpdateOrder(int id, OrderUpdateDTO orderDto)
+        public IActionResult UpdateOrder(int id, OrderUpdateViewModel orderDto)
         {
             var order = _context.Orders.Find(id);
 
@@ -103,7 +103,7 @@ namespace Tea_Store.Controllers
                 return NotFound();
             }
 
-            var orderViewDto = _mapper.Map<OrderViewDTO>(order);
+            var orderViewDto = _mapper.Map<OrderViewViewModel>(order);
 
             return Ok(orderViewDto);
         }

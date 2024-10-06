@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Tea_Store.DTOs.UsersDTO;
 using Tea_Store.Models;
+using ViewModels.AuthController;
 
 namespace Tea_Store.Mappings
 {
@@ -8,9 +8,11 @@ namespace Tea_Store.Mappings
     {
         public UserMappingProfile()
         {
-            CreateMap<RegistrationDTO, User>()
+            /*
+            CreateMap<RegistrationViewModel, User>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+            */
         }
     }
 }

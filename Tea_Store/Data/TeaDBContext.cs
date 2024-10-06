@@ -91,12 +91,6 @@ namespace Tea_Store.Data
                 .HasMany(wl => wl.WishListTeas)
                 .WithOne(wlt => wlt.WishList)
                 .HasForeignKey(wlt => wlt.WishListID);
-
-            // Order - OrderTea (One-to-Many)
-            modelBuilder.Entity<Order>()
-                .HasMany(o => o.OrderTeas)
-                .WithOne(ot => ot.Order)
-                .HasForeignKey(ot => ot.OrderID);
         }
     }
 }
