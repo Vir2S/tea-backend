@@ -1,6 +1,6 @@
-﻿namespace Tea_Store.DTOs.OrdersDTO
+﻿namespace ViewModels.OrderController
 {
-    public class OrderCreateDTO
+    public class OrderCreateViewModel
     {
         public int UserId { get; set; }
         public List<int> TeaIds { get; set; }

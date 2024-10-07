@@ -21,10 +21,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication()
                 .AddBearerToken(IdentityConstants.BearerScheme);
-
+/*
 builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<TeaDBContext>()
     .AddDefaultTokenProviders();
+*/
 builder.Services.AddAutoMapper(typeof(UserMappingProfile));
 builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
 
