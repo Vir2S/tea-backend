@@ -38,7 +38,7 @@ namespace Tea_Store.Controllers.Auth
                 return BadRequest(new { message = "Користувач з таким email або номером телефону вже існує." });
             }
 
-            var user = _mapper.Map<User>(registerDTO);
+            var user = _mapper.Map<User>(registerViewModel);
             user.Password = _passwordHasher.HashPassword(user, registerViewModel.Password);
             user.Role = Role.user;
             user.EmailConfirmed = false;

@@ -21,15 +21,15 @@ namespace Tea_Store.Controllers.Auth
         private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
         private readonly IConfiguration _configuration = configuration;
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginDTO.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginViewModel.Email);
 
             if (user == null || !user.EmailConfirmed)
             {
                 return Unauthorized(new { message = "Невірний email або користувач не підтвердив свою електронну пошту." });
             }
-            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginDTO.Password);
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginViewModel.Password);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
                 return Unauthorized(new { message = "Невірний пароль." });
@@ -48,7 +48,6 @@ namespace Tea_Store.Controllers.Auth
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
