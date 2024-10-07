@@ -1,6 +1,6 @@
-﻿namespace Tea_Store.DTOs.OrdersDTO
+﻿namespace ViewModels.OrderController
 {
-    public class TeaDTO
+    public class TeaViewModel
     {
         public int Id { get; set; }
         public string Title { get; set; }

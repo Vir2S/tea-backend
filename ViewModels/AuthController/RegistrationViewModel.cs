@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Tea_Store.DTOs.UsersDTO
+namespace ViewModels.AuthController
 {
-    public class RegistrationDTO
+    public class RegistrationViewModel
     {
         [Required]
         public string FName { get; set; } = null!;
@@ -15,6 +15,10 @@ namespace Tea_Store.DTOs.UsersDTO
 
         [Required, MinLength(6)]
         public string Password { get; set; } = null!;
+        [Required, Phone]
+        public string PhoneNumber { get; set; } = null!;
+        [Required, Compare("Password")]
+        public string ConfirmPassword { get; set; } = null!;
 
         [Range(0, 150)]
         public int Age { get; set; }

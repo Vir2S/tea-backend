@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Tea_Store.DTOs.UsersDTO
+namespace ViewModels.AuthController
 {
-    public class LoginDTO
+    public class LoginViewModel
     {
         [Required, EmailAddress]
         public string Email { get; set; } = null!;
