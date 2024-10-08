@@ -8,8 +8,6 @@ using System.IdentityModel.Tokens.Jwt;
 using ViewModels.AuthController;
 using Tea_Store.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration; 
-
 
 namespace Tea_Store.Controllers.Auth
 {
@@ -29,6 +27,7 @@ namespace Tea_Store.Controllers.Auth
             {
                 return Unauthorized(new { message = "Невірний email або користувач не підтвердив свою електронну пошту." });
             }
+            
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginViewModel.Password);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
