@@ -30,6 +30,7 @@ namespace Tea_Store.Controllers.Auth
                 return Unauthorized(new { message = "Invalid email or the email has not been confirmed." });
             }
 
+
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginViewModel.Password);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {

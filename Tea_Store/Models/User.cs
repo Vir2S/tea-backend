@@ -21,6 +21,7 @@ namespace Tea_Store.Models
         public byte[]? Photo { get; set; } = null!;
         public bool EmailConfirmed { get; set; } = false;
         public string? EmailConfirmationToken { get; set; }
+
         public int? WishListID { get; set; }
         public virtual SiteReview? SiteReview { get; set; }
         public virtual WishList? WishList { get; set; }

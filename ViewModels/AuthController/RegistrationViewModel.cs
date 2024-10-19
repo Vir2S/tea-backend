@@ -15,10 +15,13 @@ namespace ViewModels.AuthController
 
         [Required, MinLength(6)]
         public string Password { get; set; } = null!;
+      
         [Required, Phone]
         public string PhoneNumber { get; set; } = null!;
+      
         [Required, Compare("Password")]
         public string ConfirmPassword { get; set; } = null!;
+
 
         [Range(0, 150)]
         public int Age { get; set; }
