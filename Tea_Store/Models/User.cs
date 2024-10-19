@@ -18,8 +18,10 @@ namespace Tea_Store.Models
         public Role Role { get; set; }
         public string Password { get; set; } = null!;
         public int Age { get; set; }
-        // ?*
         public byte[]? Photo { get; set; } = null!;
+        public bool EmailConfirmed { get; set; } = false;
+        public string? EmailConfirmationToken { get; set; }
+
         public int? WishListID { get; set; }
         public virtual SiteReview? SiteReview { get; set; }
         public virtual WishList? WishList { get; set; }

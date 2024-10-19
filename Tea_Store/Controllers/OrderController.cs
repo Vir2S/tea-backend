@@ -89,7 +89,6 @@ namespace Tea_Store.Controllers
             return Ok(order);
         }
 
-        // Order get
         [HttpGet("{id}")]
         public IActionResult GetOrder(int id)
         {

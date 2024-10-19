@@ -8,11 +8,8 @@ namespace Tea_Store.Mappings
     {
         public UserMappingProfile()
         {
-            /*
             CreateMap<RegistrationViewModel, User>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
-            */
+                        .ForMember(dest => dest.Password, opt => opt.Ignore());
         }
     }
 }

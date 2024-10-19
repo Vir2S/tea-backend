@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using Tea_Store.Data;
+using Tea_Store.Controllers.Auth;
+using Tea_Store.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,15 +21,13 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthentication()
-                .AddBearerToken(IdentityConstants.BearerScheme);
-/*
-builder.Services.AddIdentity<User, IdentityRole<int>>()
-    .AddEntityFrameworkStores<TeaDBContext>()
-    .AddDefaultTokenProviders();
-*/
+
 builder.Services.AddAutoMapper(typeof(UserMappingProfile));
 builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
 
 
 builder.Services.AddAuthentication(options =>
@@ -42,17 +42,19 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "TeaStoreIssuer",
+        ValidIssuer = "TeaStoreIssue",
         ValidAudience = "TeaStoreAudience",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TeaStoreSecretKey"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourVeryStrongAndSecureSecretKeyForTeaStore!2024@#SuperSecureKey"))
     };
 });
+
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 });
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
-builder.Services.AddAuthorizationBuilder();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
