@@ -13,7 +13,6 @@ using ViewModels.AuthController;
 
 namespace Tea_Store.Controllers.Auth
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class RegistrationController(TeaDBContext context, IMapper mapper, IPasswordHasher<User> passwordHasher, IEmailService emailService) : ControllerBase
@@ -22,7 +21,6 @@ namespace Tea_Store.Controllers.Auth
         private readonly IMapper _mapper = mapper;
         private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
         private readonly IEmailService _emailService = emailService;
-
 
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegistrationViewModel registerViewModel)
@@ -35,7 +33,7 @@ namespace Tea_Store.Controllers.Auth
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerViewModel.Email || u.PhoneNumber == registerViewModel.PhoneNumber);
             if (existingUser != null)
             {
-                return BadRequest(new { message = "Користувач з таким email або номером телефону вже існує." });
+                return BadRequest(new { message = "User with this email or phone number already exists." });
             }
 
             var user = _mapper.Map<User>(registerViewModel);
@@ -53,11 +51,10 @@ namespace Tea_Store.Controllers.Auth
 
             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Registration", new { token, email = user.Email }, Request.Scheme);
 
-            await _emailService.SendEmailAsync(user.Email, "Підтвердження реєстрації", $"Перейдіть за посиланням для підтвердження: {confirmationLink}");
+            await _emailService.SendEmailAsync(user.Email, "Email Confirmation", $"Please click the link to confirm your email: {confirmationLink}");
 
-            return Ok(new { message = "Лист з підтвердженням був відправлений на вашу електронну пошту!" });
+            return Ok(new { message = "A confirmation email has been sent to your email address!" });
         }
-
 
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string token, string email)
@@ -65,7 +62,7 @@ namespace Tea_Store.Controllers.Auth
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.EmailConfirmationToken == token);
             if (user == null)
             {
-                return BadRequest(new { message = "Невірний токен або електронна адреса." });
+                return BadRequest(new { message = "Invalid token or email address." });
             }
 
             user.EmailConfirmed = true;
@@ -76,7 +73,7 @@ namespace Tea_Store.Controllers.Auth
 
             var tokenString = GenerateJwtToken(user);
 
-            return Ok(new { token = tokenString, message = "Електронну пошту успішно підтверджено!" });
+            return Ok(new { token = tokenString, message = "Email successfully confirmed!" });
         }
 
         private string GenerateJwtToken(User user)
@@ -87,16 +84,14 @@ namespace Tea_Store.Controllers.Auth
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-            new Claim(ClaimTypes.Name, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email)
-        }),
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email)
+                }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
-
     }
 }

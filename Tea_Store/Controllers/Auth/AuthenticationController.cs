@@ -8,7 +8,6 @@ using System.IdentityModel.Tokens.Jwt;
 using ViewModels.AuthController;
 using Tea_Store.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration; 
 
 
 namespace Tea_Store.Controllers.Auth
@@ -20,6 +19,7 @@ namespace Tea_Store.Controllers.Auth
         private readonly TeaDBContext _context = context;
         private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
         private readonly IConfiguration _configuration = configuration;
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
@@ -27,19 +27,18 @@ namespace Tea_Store.Controllers.Auth
 
             if (user == null || !user.EmailConfirmed)
             {
-                return Unauthorized(new { message = "Невірний email або користувач не підтвердив свою електронну пошту." });
+                return Unauthorized(new { message = "Invalid email or the email has not been confirmed." });
             }
+
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginViewModel.Password);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
-                return Unauthorized(new { message = "Невірний пароль." });
+                return Unauthorized(new { message = "Incorrect password." });
             }
-
-
 
             var tokenString = GenerateJwtToken(user);
 
-            return Ok(new { token = tokenString, message = "Ви успішно увійшли в систему!" });
+            return Ok(new { token = tokenString, message = "Login successful!" });
         }
 
         private string GenerateJwtToken(User user)
@@ -61,6 +60,6 @@ namespace Tea_Store.Controllers.Auth
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }   
+        }
     }
 }
