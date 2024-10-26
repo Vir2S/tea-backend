@@ -26,6 +26,7 @@ builder.Services.AddAutoMapper(typeof(UserMappingProfile));
 builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IShoppingCart, ShoppingCartService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 
