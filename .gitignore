@@ -59,3 +59,7 @@ dkms.conf
 /Tea_Store/obj
 /Tea_Store/bin/Debug
 /Tea_Store/Properties
+/ViewModels/bin/Debug/net8.0
+/ViewModels/obj/Debug/net8.0
+/ViewModels/obj/Release/net8.0
+/ViewModels/obj
