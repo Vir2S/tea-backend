@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Tea_Store.Data;
 using Tea_Store.Models;
 using ViewModels.CartController;
@@ -8,8 +9,13 @@ namespace Tea_Store.Services
 {
     public interface IShoppingCart
     {
-        Task<ShoppingCart> AddItemToCart(int userId, CartItemAddViewModel addCartItemViewModel);
+        Task<ShoppingCart> AddItemToCart(int userId, int teaId, CartItemUpdateViewModel addCartItemViewModel);
+        Task<ShoppingCart> UpdateCartItem(CartItem oldCartItem, int newQuantity);
+        Task<ShoppingCart?> GetShoppingCartByUserId(int userId);
         Task<bool> UserExists(int userId);
+        Task<bool> TeaExists(int teaId);
+        Task<CartItem> GetCartItem(int userId, int teaId);
+        Task DeleteCartItem(int userId, int teaId);
     }
     public class ShoppingCartService : IShoppingCart
     {
@@ -22,11 +28,9 @@ namespace Tea_Store.Services
             _mapper = mapper;
         }
 
-        public async Task<ShoppingCart> AddItemToCart(int userId, CartItemAddViewModel addCartItemViewModel)
+        public async Task<ShoppingCart> AddItemToCart(int userId, int teaId, CartItemUpdateViewModel addCartItemViewModel)
         {
-            var cart = await _context.ShoppingCarts
-                .Include(c => c.CartItems)
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+            var cart = await GetShoppingCartByUserId(userId);
 
             var cartItem = _mapper.Map<CartItem>(addCartItemViewModel);
 
@@ -41,9 +45,9 @@ namespace Tea_Store.Services
 
             else
             {
-                if (cart.CartItems.Any(ci => ci.TeaId == cartItem.TeaId))
+                if (cart.CartItems.Any(ci => ci.TeaId == teaId))
                 {
-                    var _cartItem = cart.CartItems.First(ci => ci.TeaId == cartItem.TeaId);
+                    var _cartItem = cart.CartItems.First(ci => ci.TeaId == teaId);
                     _cartItem.Quantity += cartItem.Quantity;
                     if (_cartItem.Quantity > 100)
                     {
@@ -55,23 +59,53 @@ namespace Tea_Store.Services
                     cartItem.ShoppingCartId = cart.Id;
                     cart.CartItems.Add(cartItem);
                 }
-                
-            }
 
+            }
+            cartItem.TeaId = teaId;
             await _context.SaveChangesAsync();
             return cart;
         }
 
-        public Task<bool> UserExists(int userId)
+        public async Task<ShoppingCart> UpdateCartItem(CartItem oldCartItem, int newQuantity)
         {
-            return _context.Users.AnyAsync(u => u.Id == userId);
+            oldCartItem.Quantity = newQuantity;
+            await _context.SaveChangesAsync();
+            return await _context.ShoppingCarts.FirstOrDefaultAsync(c => c.Id == oldCartItem.ShoppingCartId);
         }
 
-        //public async Task<ShoppingCart?> GetShoppingCartByUserId(int userId)
-        //{
-        //    return await _context.ShoppingCarts
-        //        .Include(c => c.CartItems)
-        //        .FirstOrDefaultAsync(c => c.UserId == userId);
-        //}
+
+        public async Task<ShoppingCart?> GetShoppingCartByUserId(int userId)
+        {
+            return await _context.ShoppingCarts
+                .Include(c => c.CartItems)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+        }
+        public async Task<CartItem?> GetCartItem(int userId, int teaId)
+        {
+            var cart = await GetShoppingCartByUserId(userId);
+            if (cart != null)
+            {
+                return cart.CartItems.FirstOrDefault(ci => ci.TeaId == teaId);
+            }
+            return null;
+        }
+
+        public async Task DeleteCartItem(int userId, int teaId)
+        {
+            var cartItem = await GetCartItem(userId, teaId);
+
+            _context.CartItems.Remove(cartItem);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UserExists(int userId)
+        {
+            return await _context.Users.AnyAsync(u => u.Id == userId);
+        }
+
+        public async Task<bool> TeaExists(int teaId)
+        {
+            return await _context.Teas.AnyAsync(t => t.Id == teaId);
+        }
     }
 }

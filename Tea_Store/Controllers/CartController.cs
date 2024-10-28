@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Tea_Store.Data;
-using Tea_Store.Models;
+using System.Security.Claims;
 using Tea_Store.Services;
 using ViewModels.CartController;
-using ViewModels.OrderController;
 
 namespace Tea_Store.Controllers
 {
@@ -13,62 +11,107 @@ namespace Tea_Store.Controllers
     [Route("api/cart")]
     public class CartController : ControllerBase
     {
-        private readonly IShoppingCart _service;
+        private readonly IShoppingCart _cartService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public CartController(IShoppingCart service, IMapper mapper)
+        public CartController(IShoppingCart service, IUserService userService, IMapper mapper)
         {
-            _service = service;
+            _cartService = service;
+            _userService = userService;
             _mapper = mapper;
         }
 
-        [HttpPost("{userId}")]
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetShoppingCart()
+        {
+            var user = await _userService.GetUserIdByToken(User);
 
-        public async Task<IActionResult> AddItemToCart(int userId, [FromBody] CartItemAddViewModel addCartItemDto)
-        {   
-            if (!await _service.UserExists(userId))
+            if (user == null)
             {
-                return NotFound("User is not found");
+                return Unauthorized("Invalid JWT token");
             }
-            var cart = await _service.AddItemToCart(userId, addCartItemDto);
+
+            var shoppingCart = await _cartService.GetShoppingCartByUserId(user.Id);
+
+            if (shoppingCart == null)
+            {
+                return NotFound("Shopping cart is not found");
+            }
+
+            var cartResponse = _mapper.Map<CartViewViewModel>(shoppingCart);
+            return Ok(cartResponse);
+        }
+
+        [HttpPost("{teaId}")]
+        [Authorize]
+
+        public async Task<IActionResult> AddItemToCart(int teaId, [FromBody] CartItemUpdateViewModel addCartItemDto)
+        {
+            var user = await _userService.GetUserIdByToken(User);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid JWT token");
+            }
+
+            if (!await _cartService.TeaExists(teaId))
+            {
+                return NotFound("Tea is not found");
+            }
+
+            var cart = await _cartService.AddItemToCart(user.Id, teaId, addCartItemDto);
             var cartResponse = _mapper.Map<CartViewViewModel>(cart);
             return Ok(cartResponse);
         }
 
-        //// Order status update
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateOrder(int id, OrderUpdateViewModel orderDto)
-        //{
-        //    var order = _context.Orders.Find(id);
+        [HttpPut("{teaId}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateOrder(int teaId, [FromBody] CartItemUpdateViewModel updateCartItemDto)
+        {
+            var user = await _userService.GetUserIdByToken(User);
 
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (user == null)
+            {
+                return Unauthorized("Invalid JWT token");
+            }
 
-        //    order.Status = orderDto.Status;
-        //    order.Updated = DateTime.Now;
-        //    _context.SaveChanges();
+            var cartItem = await _cartService.GetCartItem(user.Id, teaId);
 
-        //    return Ok(order);
-        //}
+            if (cartItem == null)
+            {
+                return NotFound("Cart item is not found");
+            }
 
-        //[HttpGet("{id}")]
-        //public IActionResult GetOrder(int id)
-        //{
-        //    var order = _context.Orders
-        //        .Include(o => o.OrderTeas)
-        //        .ThenInclude(ot => ot.Tea)
-        //        .FirstOrDefault(o => o.Id == id);
+            var cart = await _cartService.UpdateCartItem(cartItem, updateCartItemDto.Quantity);
 
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var cartResponse = _mapper.Map<CartViewViewModel>(cart);
+            return Ok(cartResponse);
+        }
 
-        //    var orderViewDto = _mapper.Map<OrderViewViewModel>(order);
+        [HttpDelete("{teaId}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteCartItem(int teaId)
+        {
+            var user = await _userService.GetUserIdByToken(User);
 
-        //    return Ok(orderViewDto);
-        //}
+            if (user == null)
+            {
+                return Unauthorized("Invalid JWT token");
+            }
+
+            var cartItem = await _cartService.GetCartItem(user.Id, teaId);
+
+            if (cartItem == null)
+            {
+                return NotFound("Cart item is not found");
+            }
+
+            await _cartService.DeleteCartItem(user.Id, teaId);
+
+            return Ok("Deleted succesfully");
+        }
+
     }
 }

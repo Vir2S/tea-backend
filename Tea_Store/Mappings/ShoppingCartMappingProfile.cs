@@ -8,15 +8,18 @@ namespace Tea_Store.Mappings
     {
         public ShoppingCartMappingProfile()
         {
-            CreateMap<CartItemAddViewModel, CartItem>()
+            CreateMap<CartItemViewModel, CartItem>()
                 .ForMember(dest => dest.TeaId, opt => opt.MapFrom(src => src.TeaId))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
+
+            CreateMap<CartItemUpdateViewModel, CartItem>()
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
 
             CreateMap<ShoppingCart, CartViewViewModel>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.CartItems));
 
-            CreateMap<CartItem, CartItemAddViewModel>()
+            CreateMap<CartItem, CartItemViewModel>()
                 .ForMember(dest => dest.TeaId, opt => opt.MapFrom(src => src.TeaId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
         }
