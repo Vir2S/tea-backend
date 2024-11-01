@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tea_Store.Data;
 
@@ -11,9 +12,11 @@ using Tea_Store.Data;
 namespace Tea_Store.Migrations
 {
     [DbContext(typeof(TeaDBContext))]
-    partial class TeaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241025163231_AddShoppingCarModels")]
+    partial class AddShoppingCarModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

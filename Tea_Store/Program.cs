@@ -5,17 +5,22 @@ using System.Text;
 using Tea_Store.Mappings;
 using Tea_Store.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Configuration;
 using Tea_Store.Data;
-using Tea_Store.Controllers.Auth;
 using Tea_Store.Services;
+using Microsoft.Extensions.Options;
+using Tea_Store;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TeaDBContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0))));
+
+//builder.Services.AddControllers().AddNewtonsoftJson(options =>
+//{
+//    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+//});
 
 builder.Services.AddControllers();
 
@@ -26,9 +31,10 @@ builder.Services.AddAutoMapper(typeof(UserMappingProfile));
 builder.Services.AddAutoMapper(typeof(OrderMappingProfile));
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IShoppingCart, ShoppingCartService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
-
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
 builder.Services.AddAuthentication(options =>
 {

@@ -11,17 +11,14 @@ namespace Tea_Store.Data
         public DbSet<SiteReview> SiteReviews { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderTea> OrderTeas { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<TeaReview> TeaReviews { get; set; }
         public DbSet<Tea> Teas { get; set; }
         public DbSet<Component> Components { get; set; }
         public DbSet<ComponentTea> ComponentTeas { get; set; }
         public DbSet<WishList> WishLists { get; set; }
         public DbSet<WishListTea> WishListTeas { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //optionsBuilder.UseMySql("ConnectionStringHere");
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,6 +88,12 @@ namespace Tea_Store.Data
                 .HasMany(wl => wl.WishListTeas)
                 .WithOne(wlt => wlt.WishList)
                 .HasForeignKey(wlt => wlt.WishListID);
+
+            // ShoppingCart - CartItem (One-to-Many)
+            modelBuilder.Entity<ShoppingCart>()
+                .HasMany(sc => sc.CartItems)
+                .WithOne(ci => ci.ShoppingCart)
+                .HasForeignKey(ci => ci.ShoppingCartId);
         }
     }
 }
